@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>禾煎 HÉ JIAN｜金黃酥脆鍋貼專賣</title>
+  <meta name="description" content="禾煎鍋貼專賣：台灣在地豬肉、每日現包、現點現煎。線上點餐、冷凍禮盒宅配。" />
+
+  <!-- 字體：Noto Serif TC（典雅標題）＋ Noto Sans TC（無襯線內文） -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@500;700;900&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            wood:   { DEFAULT: '#3B2A20', light: '#5A4134', dark: '#241912' }, // 深木質棕
+            ember:  { DEFAULT: '#D9752B', light: '#F0A15E', dark: '#B55B19' }, // 暖橘
+            cream:  { DEFAULT: '#F8F2E9', dark: '#EFE5D6' },                   // 米白
+            sand:   '#E2D3BE'
+          },
+          fontFamily: {
+            serif: ['"Noto Serif TC"', 'serif'],
+            sans:  ['"Noto Sans TC"', 'system-ui', 'sans-serif']
+          },
+          boxShadow: {
+            soft: '0 10px 30px -12px rgba(59, 42, 32, 0.25)'
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+  <style>
+    body { font-family: "Noto Sans TC", system-ui, sans-serif; }
+    /* 導覽列錨點跳轉時，預留固定 header 的高度 */
+    section[id] { scroll-margin-top: 80px; }
+    /* 細緻紙紋背景 */
+    .paper-bg {
+      background-color: #F8F2E9;
+      background-image: radial-gradient(rgba(59,42,32,0.05) 1px, transparent 1px);
+      background-size: 18px 18px;
+    }
+    /* 手風琴展開動畫 */
+    .faq-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .35s ease; }
+    .faq-item.open .faq-body { grid-template-rows: 1fr; }
+    .faq-item.open .faq-icon { transform: rotate(45deg); }
+    .faq-icon { transition: transform .3s ease; }
+    /* 卡片淡入 */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+    .fade-up { animation: fadeUp .45s ease both; }
+    /* Toast 動畫 */
+    @keyframes toastIn { from { opacity: 0; transform: translateY(16px) scale(.97); } to { opacity: 1; transform: none; } }
+    .toast-in { animation: toastIn .3s ease both; }
+    /* Badge 彈跳 */
+    @keyframes pop { 0% { transform: scale(1); } 40% { transform: scale(1.35); } 100% { transform: scale(1); } }
+    .badge-pop { animation: pop .35s ease; }
+    /* 隱藏橫向捲軸（Tab 列手機版） */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { scrollbar-width: none; }
+    /* 抽屜開啟時鎖定背景捲動 */
+    body.lock { overflow: hidden; }
+  </style>
+</head>
+
+<body class="bg-cream text-wood antialiased">
+
+  <!-- ===================================================== -->
+  <!-- 1. Header / Navigation                                 -->
+  <!-- ===================================================== -->
+  <header id="siteHeader" class="fixed inset-x-0 top-0 z-40 transition-all duration-300">
+    <div class="mx-auto flex h-16 md:h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      <!-- Logo -->
+      <a href="#top" class="flex items-center gap-2.5 group" aria-label="禾煎 首頁">
+        <span class="grid h-10 w-10 place-items-center rounded-full bg-ember text-cream shadow-soft">
+          <svg viewBox="0 0 32 32" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <!-- 鍋貼造型標誌 -->
+            <path d="M5 19c2-6 7-9 11-9s9 3 11 9" />
+            <path d="M5 19h22" />
+            <path d="M10 14l1.5 2.5M16 12v3M22 14l-1.5 2.5" />
+            <path d="M8 23h16" opacity=".6" />
+          </svg>
+        </span>
+        <span class="leading-tight">
+          <span id="logoText" class="block font-serif text-xl font-bold tracking-wider text-cream transition-colors">禾煎</span>
+          <span id="logoSub" class="block text-[10px] tracking-[0.3em] text-cream/70 transition-colors">HÉ JIAN · POTSTICKER</span>
+        </span>
+      </a>
+
+      <!-- 桌機導覽 -->
+      <nav class="hidden lg:block" aria-label="主要導覽">
+        <ul id="desktopNav" class="flex items-center gap-7 text-sm font-medium text-cream/90 transition-colors">
+          <li><a href="#story"     class="nav-link hover:text-ember transition-colors">品牌故事</a></li>
+          <li><a href="#menu"      class="nav-link hover:text-ember transition-colors">熱門餐點</a></li>
+          <li><a href="#menu"      class="nav-link hover:text-ember transition-colors">線上點餐</a></li>
+          <li><a href="#gifts"     class="nav-link hover:text-ember transition-colors">冷凍禮盒</a></li>
+          <li><a href="#locations" class="nav-link hover:text-ember transition-colors">門市據點</a></li>
+          <li><a href="#contact"   class="nav-link hover:text-ember transition-colors">聯絡我們</a></li>
+        </ul>
+      </nav>
+
+      <!-- 右側：購物車 + CTA + 手機選單 -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <button id="cartBtn" type="button" class="relative grid h-11 w-11 place-items-center rounded-full text-cream transition hover:bg-white/10" aria-label="開啟購物車">
+          <i data-lucide="shopping-bag" class="h-5 w-5"></i>
+          <span id="cartBadge" class="absolute -right-0.5 -top-0.5 hidden min-w-[20px] rounded-full bg-ember px-1.5 text-center text-[11px] font-bold leading-5 text-white">0</span>
+        </button>
+        <a href="#menu" class="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-ember px-5 py-2.5 text-sm font-semibold text-white shadow-soft transition hover:bg-ember-dark">
+          <i data-lucide="utensils" class="h-4 w-4"></i>立即點餐
+        </a>
+        <button id="menuToggle" type="button" class="grid h-11 w-11 place-items-center rounded-full text-cream transition hover:bg-white/10 lg:hidden" aria-label="開啟選單" aria-expanded="false">
+          <i data-lucide="menu" class="h-6 w-6"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- 手機版下拉選單 -->
+    <div id="mobileMenu" class="hidden border-t border-wood/10 bg-cream shadow-soft lg:hidden">
+      <ul class="mx-auto max-w-7xl px-4 py-3 text-base font-medium">
+        <li><a href="#story"     class="mobile-link block rounded-lg px-3 py-3 hover:bg-cream-dark">品牌故事</a></li>
+        <li><a href="#menu"      class="mobile-link block rounded-lg px-3 py-3 hover:bg-cream-dark">熱門餐點</a></li>
+        <li><a href="#menu"      class="mobile-link block rounded-lg px-3 py-3 hover:bg-cream-dark">線上點餐</a></li>
+        <li><a href="#gifts"     class="mobile-link block rounded-lg px-3 py-3 hover:bg-cream-dark">冷凍禮盒</a></li>
+        <li><a href="#locations" class="mobile-link block rounded-lg px-3 py-3 hover:bg-cream-dark">門市據點</a></li>
+        <li><a href="#contact"   class="mobile-link block rounded-lg px-3 py-3 hover:bg-cream-dark">聯絡我們</a></li>
+        <li class="pt-2"><a href="#menu" class="mobile-link block rounded-full bg-ember px-3 py-3 text-center font-semibold text-white">立即點餐</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ===================================================== -->
+    <!-- 2. Hero Section                                        -->
+    <!-- ===================================================== -->
+    <section class="relative flex min-h-[100svh] items-center overflow-hidden bg-wood-dark">
+      <img src="https://images.unsplash.com/photo-1496116218417-1a781b1c416c?auto=format&fit=crop&w=2000&q=80"
+           alt="剛煎好的金黃鍋貼" class="fallback-img absolute inset-0 h-full w-full object-cover opacity-60" />
+      <div class="absolute inset-0 bg-gradient-to-r from-wood-dark via-wood-dark/75 to-wood-dark/20"></div>
+      <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-wood-dark/80 to-transparent"></div>
+
+      <div class="relative mx-auto w-full max-w-7xl px-4 pt-24 pb-16 sm:px-6 lg:px-8">
+        <div class="max-w-2xl">
+          <p class="mb-5 inline-flex items-center gap-2 rounded-full border border-ember-light/40 bg-ember/15 px-4 py-1.5 text-xs tracking-[0.25em] text-ember-light">
+            <i data-lucide="flame" class="h-3.5 w-3.5"></i> SINCE 1995 · 三十年煎台手藝
+          </p>
+          <h1 class="font-serif text-4xl font-black leading-tight text-cream sm:text-5xl lg:text-6xl">
+            金黃酥脆，<br />傳承手藝的<span class="text-ember-light">極致美味</span>
+          </h1>
+          <p class="mt-6 max-w-xl text-base leading-relaxed text-cream/80 sm:text-lg">
+            每一顆鍋貼都在當天清晨手工包製，以黃金比例的麵糊水煎出薄脆冰花，咬下的瞬間，是飽滿肉汁與焦香的完美平衡。
+          </p>
+          <div class="mt-9 flex flex-col gap-3 sm:flex-row">
+            <a href="#menu" class="inline-flex items-center justify-center gap-2 rounded-full bg-ember px-8 py-4 font-semibold text-white shadow-soft transition hover:-translate-y-0.5 hover:bg-ember-dark">
+              <i data-lucide="shopping-cart" class="h-5 w-5"></i>線上點餐
+            </a>
+            <a href="#locations" class="inline-flex items-center justify-center gap-2 rounded-full border border-cream/40 px-8 py-4 font-semibold text-cream transition hover:bg-cream hover:text-wood">
+              <i data-lucide="map-pin" class="h-5 w-5"></i>探索門市
+            </a>
+          </div>
+          <div class="mt-12 flex flex-wrap items-center gap-x-8 gap-y-3 text-sm text-cream/70">
+            <span class="inline-flex items-center gap-2"><i data-lucide="clock" class="h-4 w-4 text-ember-light"></i>每日 11:00 – 21:00</span>
+            <span class="inline-flex items-center gap-2"><i data-lucide="truck" class="h-4 w-4 text-ember-light"></i>冷凍禮盒全台宅配</span>
+          </div>
+        </div>
+      </div>
+
+      <a href="#story" class="absolute bottom-6 left-1/2 hidden -translate-x-1/2 flex-col items-center text-xs tracking-widest text-cream/60 md:flex" aria-label="往下捲動">
+        SCROLL<i data-lucide="chevron-down" class="mt-1 h-5 w-5 animate-bounce"></i>
+      </a>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- 3. Brand Story                                         -->
+    <!-- ===================================================== -->
+    <section id="story" class="paper-bg py-20 md:py-28">
+      <div class="mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 md:grid-cols-2 lg:gap-20 lg:px-8">
+        <!-- 圖片拼貼 -->
+        <div class="relative order-2 md:order-1">
+          <div class="overflow-hidden rounded-3xl shadow-soft">
+            <img src="https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=1200&q=80"
+                 alt="師傅手工包製餃子" class="fallback-img aspect-[4/5] w-full object-cover" loading="lazy" />
+          </div>
+          <div class="absolute -bottom-8 -right-2 w-44 overflow-hidden rounded-2xl border-4 border-cream shadow-soft sm:w-56 md:-right-8">
+            <img src="https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=600&q=80"
+                 alt="煎台上的鍋貼" class="fallback-img aspect-square w-full object-cover" loading="lazy" />
+          </div>
+          <div class="absolute -left-3 top-8 rounded-2xl bg-wood px-5 py-4 text-cream shadow-soft sm:-left-6">
+            <p class="font-serif text-3xl font-black text-ember-light">30<span class="text-base">年</span></p>
+            <p class="text-xs tracking-widest text-cream/70">老店煎台技術</p>
+          </div>
+        </div>
+
+        <!-- 文字 -->
+        <div class="order-1 md:order-2">
+          <p class="text-sm font-semibold tracking-[0.3em] text-ember">OUR STORY</p>
+          <h2 class="mt-3 font-serif text-3xl font-bold leading-snug sm:text-4xl">一塊煎台，<br />三十年只做好一件事</h2>
+          <p class="mt-6 leading-relaxed text-wood-light">
+            禾煎從眷村巷口的小攤起家，第一代師傅相信「好吃沒有捷徑」。我們堅持不用預製冷凍餡料，每天清晨揉麵、剁餡、手工包摺，只為了讓你吃到最直接的麥香與肉汁。
+          </p>
+
+          <ul class="mt-8 space-y-5">
+            <li class="flex gap-4">
+              <span class="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-ember/10 text-ember"><i data-lucide="beef" class="h-6 w-6"></i></span>
+              <div><h3 class="font-bold">台灣在地豬肉</h3><p class="text-sm text-wood-light">選用 CAS 認證溫體豬前腿肉，肥瘦 3:7 黃金比例，現絞現拌。</p></div>
+            </li>
+            <li class="flex gap-4">
+              <span class="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-ember/10 text-ember"><i data-lucide="hand" class="h-6 w-6"></i></span>
+              <div><h3 class="font-bold">每日現包</h3><p class="text-sm text-wood-light">當日包、當日售，賣完即止，絕不隔夜販售。</p></div>
+            </li>
+            <li class="flex gap-4">
+              <span class="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-ember/10 text-ember"><i data-lucide="flame" class="h-6 w-6"></i></span>
+              <div><h3 class="font-bold">黃金煎脆比例</h3><p class="text-sm text-wood-light">獨門麵粉水比例，煎出如蕾絲般輕薄的焦脆冰花底。</p></div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 數據展示 -->
+      <div class="mx-auto mt-24 max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-2 gap-4 rounded-3xl bg-wood p-6 text-center text-cream shadow-soft sm:p-10 md:grid-cols-4">
+          <div class="p-2"><p class="font-serif text-3xl font-black text-ember-light sm:text-4xl"><span class="counter" data-target="10000">0</span>+</p><p class="mt-2 text-sm text-cream/70">每日賣出顆數</p></div>
+          <div class="p-2"><p class="font-serif text-3xl font-black text-ember-light sm:text-4xl"><span class="counter" data-target="100">0</span>%</p><p class="mt-2 text-sm text-cream/70">現點現煎</p></div>
+          <div class="p-2"><p class="font-serif text-3xl font-black text-ember-light sm:text-4xl"><span class="counter" data-target="30">0</span>年</p><p class="mt-2 text-sm text-cream/70">老店技術傳承</p></div>
+          <div class="p-2"><p class="font-serif text-3xl font-black text-ember-light sm:text-4xl"><span class="counter" data-target="18">0</span>摺</p><p class="mt-2 text-sm text-cream/70">每顆手工摺紋</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- 4. Featured Menu / Online Ordering                     -->
+    <!-- ===================================================== -->
+    <section id="menu" class="bg-cream-dark py-20 md:py-28">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-2xl text-center">
+          <p class="text-sm font-semibold tracking-[0.3em] text-ember">MENU &amp; ORDER</p>
+          <h2 class="mt-3 font-serif text-3xl font-bold sm:text-4xl">熱門餐點・線上點餐</h2>
+          <p class="mt-4 text-wood-light">選好餐點加入購物車，可選擇內用、外帶或宅配，現點現煎約 10 分鐘完成。</p>
+        </div>
+
+        <!-- 分類 Tabs -->
+        <div class="mt-10 flex justify-start overflow-x-auto no-scrollbar sm:justify-center" role="tablist" aria-label="菜單分類">
+          <div id="menuTabs" class="inline-flex gap-2 rounded-full bg-cream p-1.5 shadow-soft"></div>
+        </div>
+
+        <!-- 產品卡片 -->
+        <div id="menuGrid" class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"></div>
+      </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- 5. Gift Boxes                                          -->
+    <!-- ===================================================== -->
+    <section id="gifts" class="relative overflow-hidden bg-wood py-20 text-cream md:py-28">
+      <div class="pointer-events-none absolute -right-32 -top-32 h-96 w-96 rounded-full bg-ember/20 blur-3xl"></div>
+      <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="grid items-end gap-8 md:grid-cols-2">
+          <div>
+            <p class="text-sm font-semibold tracking-[0.3em] text-ember-light">FROZEN GIFT BOX</p>
+            <h2 class="mt-3 font-serif text-3xl font-bold sm:text-4xl">把門市的酥脆，<br />打包回家</h2>
+          </div>
+          <p class="leading-relaxed text-cream/75">家庭常備、節慶送禮都適合。全程冷鏈配送，收到後放冷凍庫即可保存 60 天。</p>
+        </div>
+
+        <!-- 特色說明 -->
+        <div class="mt-12 grid gap-4 sm:grid-cols-3">
+          <div class="rounded-2xl border border-cream/10 bg-white/5 p-6">
+            <i data-lucide="snowflake" class="h-7 w-7 text-ember-light"></i>
+            <h3 class="mt-4 font-bold">液態氮急速冷凍</h3>
+            <p class="mt-1 text-sm text-cream/70">-196°C 瞬間鎖住肉汁，解凍後不出水、不破皮。</p>
+          </div>
+          <div class="rounded-2xl border border-cream/10 bg-white/5 p-6">
+            <i data-lucide="timer" class="h-7 w-7 text-ember-light"></i>
+            <h3 class="mt-4 font-bold">在家 8 分鐘還原</h3>
+            <p class="mt-1 text-sm text-cream/70">免退冰，平底鍋加水煎 8 分鐘，冰花底一樣酥脆。</p>
+          </div>
+          <div class="rounded-2xl border border-cream/10 bg-white/5 p-6">
+            <i data-lucide="package-check" class="h-7 w-7 text-ember-light"></i>
+            <h3 class="mt-4 font-bold">冷鏈宅配到府</h3>
+            <p class="mt-1 text-sm text-cream/70">黑貓冷凍宅配，全台本島 2–3 天送達。</p>
+          </div>
+        </div>
+
+        <!-- 禮盒卡片 -->
+        <div id="giftGrid" class="mt-12 grid gap-6 md:grid-cols-3"></div>
+      </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- 6. Locations & Hours                                   -->
+    <!-- ===================================================== -->
+    <section id="locations" class="paper-bg py-20 md:py-28">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-2xl text-center">
+          <p class="text-sm font-semibold tracking-[0.3em] text-ember">LOCATIONS</p>
+          <h2 class="mt-3 font-serif text-3xl font-bold sm:text-4xl">門市據點與營業資訊</h2>
+        </div>
+
+        <div class="mt-12 grid gap-6 lg:grid-cols-5">
+          <!-- 門市切換卡片 -->
+          <div id="storeList" class="flex gap-3 overflow-x-auto no-scrollbar pb-2 lg:col-span-2 lg:flex-col lg:overflow-visible lg:pb-0" role="tablist" aria-label="門市列表"></div>
+
+          <!-- 門市詳細 + 地圖 -->
+          <div class="overflow-hidden rounded-3xl bg-white shadow-soft lg:col-span-3">
+            <!-- 擬真地圖 UI 外框 -->
+            <div class="flex items-center gap-2 border-b border-sand bg-cream px-4 py-2.5">
+              <span class="h-3 w-3 rounded-full bg-[#ED6A5E]"></span>
+              <span class="h-3 w-3 rounded-full bg-[#F4BF4F]"></span>
+              <span class="h-3 w-3 rounded-full bg-[#61C554]"></span>
+              <div class="ml-3 flex flex-1 items-center gap-2 truncate rounded-md bg-white px-3 py-1 text-xs text-wood-light">
+                <i data-lucide="map" class="h-3.5 w-3.5 shrink-0"></i><span id="mapUrlText" class="truncate">maps.google.com</span>
+              </div>
+            </div>
+            <div class="relative aspect-[16/10] bg-sand">
+              <iframe id="storeMap" title="門市地圖" class="absolute inset-0 h-full w-full border-0" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src=""></iframe>
+            </div>
+            <div id="storeDetail" class="p-6 sm:p-8"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================== -->
+    <!-- FAQ (Accordion)                                        -->
+    <!-- ===================================================== -->
+    <section id="faq" class="bg-cream-dark py-20 md:py-28">
+      <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+          <p class="text-sm font-semibold tracking-[0.3em] text-ember">FAQ</p>
+          <h2 class="mt-3 font-serif text-3xl font-bold sm:text-4xl">常見問題</h2>
+        </div>
+        <div id="faqList" class="mt-10 space-y-3"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================================================== -->
+  <!-- 7. Footer                                              -->
+  <!-- ===================================================== -->
+  <footer id="contact" class="bg-wood-dark text-cream/80">
+    <div class="mx-auto grid max-w-7xl gap-12 px-4 py-16 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:px-8">
+      <div class="lg:col-span-1">
+        <p class="font-serif text-2xl font-bold text-cream">禾煎</p>
+        <p class="mt-1 text-[10px] tracking-[0.3em] text-cream/50">HÉ JIAN · POTSTICKER</p>
+        <p class="mt-4 text-sm leading-relaxed">一塊煎台，三十年只做好一件事。現點現煎，金黃酥脆。</p>
+        <div class="mt-6 flex gap-3">
+          <a href="https://www.instagram.com/" target="_blank" rel="noopener" class="grid h-10 w-10 place-items-center rounded-full bg-white/10 transition hover:bg-ember" aria-label="Instagram"><i data-lucide="instagram" class="h-5 w-5"></i></a>
+          <a href="https://www.facebook.com/" target="_blank" rel="noopener" class="grid h-10 w-10 place-items-center rounded-full bg-white/10 transition hover:bg-ember" aria-label="Facebook"><i data-lucide="facebook" class="h-5 w-5"></i></a>
+          <a href="https://line.me/" target="_blank" rel="noopener" class="grid h-10 w-10 place-items-center rounded-full bg-white/10 text-xs font-black transition hover:bg-ember" aria-label="LINE">LINE</a>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="font-bold text-cream">聯絡我們</h3>
+        <ul class="mt-4 space-y-3 text-sm">
+          <li class="flex gap-2"><i data-lucide="phone" class="mt-0.5 h-4 w-4 shrink-0 text-ember-light"></i>客服專線 0800-123-456</li>
+          <li class="flex gap-2"><i data-lucide="mail" class="mt-0.5 h-4 w-4 shrink-0 text-ember-light"></i>hello@hejian.tw</li>
+          <li class="flex gap-2"><i data-lucide="clock" class="mt-0.5 h-4 w-4 shrink-0 text-ember-light"></i>週一至週五 09:00 – 18:00</li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="font-bold text-cream">快速連結</h3>
+        <ul class="mt-4 grid grid-cols-2 gap-y-3 text-sm md:grid-cols-1">
+          <li><a href="#story" class="hover:text-ember-light">品牌故事</a></li>
+          <li><a href="#menu" class="hover:text-ember-light">線上點餐</a></li>
+          <li><a href="#gifts" class="hover:text-ember-light">冷凍禮盒</a></li>
+          <li><a href="#locations" class="hover:text-ember-light">門市據點</a></li>
+          <li><a href="#faq" class="hover:text-ember-light">常見問題</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="font-bold text-cream">訂閱電子報</h3>
+        <p class="mt-4 text-sm">新品上市、節慶禮盒早鳥優惠，第一時間通知你。</p>
+        <form id="newsletterForm" class="mt-4 flex flex-col gap-2 sm:flex-row lg:flex-col xl:flex-row" novalidate>
+          <label for="newsletterEmail" class="sr-only">Email</label>
+          <input id="newsletterEmail" type="email" required placeholder="your@email.com"
+                 class="min-w-0 flex-1 rounded-full border border-white/15 bg-white/5 px-4 py-3 text-sm text-cream placeholder:text-cream/40 focus:border-ember focus:outline-none" />
+          <button type="submit" class="rounded-full bg-ember px-5 py-3 text-sm font-semibold text-white transition hover:bg-ember-dark">訂閱</button>
+        </form>
+        <p id="newsletterMsg" class="mt-2 hidden text-xs"></p>
+      </div>
+    </div>
+
+    <div class="border-t border-white/10">
+      <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 py-6 text-xs text-cream/50 sm:flex-row sm:px-6 lg:px-8">
+        <p>© <span id="year"></span> 禾煎鍋貼 HÉ JIAN. All rights reserved.</p>
+        <div class="flex gap-5">
+          <a href="#" class="policy-link hover:text-cream" data-policy="privacy">隱私權政策</a>
+          <a href="#" class="policy-link hover:text-cream" data-policy="terms">服務條款</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===================================================== -->
+  <!-- Cart Drawer（側邊購物車）                              -->
+  <!-- ===================================================== -->
+  <div id="cartOverlay" class="fixed inset-0 z-50 hidden bg-wood-dark/50 backdrop-blur-sm"></div>
+  <aside id="cartDrawer" class="fixed right-0 top-0 z-50 flex h-full w-full max-w-md translate-x-full flex-col bg-cream shadow-2xl transition-transform duration-300" aria-label="購物車" aria-hidden="true">
+    <div class="flex items-center justify-between border-b border-sand px-6 py-5">
+      <h2 class="flex items-center gap-2 font-serif text-xl font-bold"><i data-lucide="shopping-bag" class="h-5 w-5 text-ember"></i>我的購物車</h2>
+      <button id="cartClose" type="button" class="grid h-10 w-10 place-items-center rounded-full hover:bg-cream-dark" aria-label="關閉購物車"><i data-lucide="x" class="h-5 w-5"></i></button>
+    </div>
+    <div id="cartItems" class="flex-1 overflow-y-auto px-6 py-4"></div>
+    <div id="cartFooter" class="border-t border-sand bg-white px-6 py-5">
+      <div class="flex justify-between text-sm text-wood-light"><span>小計</span><span id="cartSubtotal">NT$0</span></div>
+      <div class="mt-1 flex justify-between text-sm text-wood-light"><span>商品數量</span><span id="cartCount">0 件</span></div>
+      <div class="mt-3 flex items-end justify-between border-t border-dashed border-sand pt-3">
+        <span class="font-bold">總金額</span><span id="cartTotal" class="font-serif text-2xl font-black text-ember">NT$0</span>
+      </div>
+      <p class="mt-1 text-right text-[11px] text-wood-light/70">宅配運費於結帳時計算</p>
+      <button id="checkoutBtn" type="button" class="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-wood py-4 font-semibold text-cream transition hover:bg-wood-light disabled:cursor-not-allowed disabled:opacity-40">
+        前往結帳<i data-lucide="arrow-right" class="h-4 w-4"></i>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ===================================================== -->
+  <!-- Checkout Modal（結帳視窗）                             -->
+  <!-- ===================================================== -->
+  <div id="checkoutModal" class="fixed inset-0 z-[60] hidden items-end justify-center bg-wood-dark/60 backdrop-blur-sm sm:items-center sm:p-4" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
+    <div class="fade-up max-h-[92vh] w-full overflow-y-auto rounded-t-3xl bg-cream shadow-2xl sm:max-w-lg sm:rounded-3xl">
+
+      <!-- 步驟一：訂單確認表單 -->
+      <div id="checkoutFormView">
+        <div class="sticky top-0 z-10 flex items-center justify-between border-b border-sand bg-cream px-6 py-5">
+          <h2 id="checkoutTitle" class="font-serif text-xl font-bold">確認訂單</h2>
+          <button type="button" class="modal-close grid h-10 w-10 place-items-center rounded-full hover:bg-cream-dark" aria-label="關閉"><i data-lucide="x" class="h-5 w-5"></i></button>
+        </div>
+
+        <form id="checkoutForm" class="space-y-6 px-6 py-6" novalidate>
+          <!-- 取餐方式 -->
+          <fieldset>
+            <legend class="mb-3 text-sm font-bold">取餐方式</legend>
+            <div class="grid grid-cols-3 gap-2">
+              <label class="cursor-pointer">
+                <input type="radio" name="orderType" value="dine" class="peer sr-only" checked />
+                <span class="flex flex-col items-center gap-1 rounded-2xl border-2 border-sand bg-white py-3 text-sm transition peer-checked:border-ember peer-checked:bg-ember/10 peer-checked:text-ember-dark">
+                  <i data-lucide="utensils-crossed" class="h-5 w-5"></i>內用
+                </span>
+              </label>
+              <label class="cursor-pointer">
+                <input type="radio" name="orderType" value="takeout" class="peer sr-only" />
+                <span class="flex flex-col items-center gap-1 rounded-2xl border-2 border-sand bg-white py-3 text-sm transition peer-checked:border-ember peer-checked:bg-ember/10 peer-checked:text-ember-dark">
+                  <i data-lucide="shopping-bag" class="h-5 w-5"></i>外帶
+                </span>
+              </label>
+              <label class="cursor-pointer">
+                <input type="radio" name="orderType" value="delivery" class="peer sr-only" />
+                <span class="flex flex-col items-center gap-1 rounded-2xl border-2 border-sand bg-white py-3 text-sm transition peer-checked:border-ember peer-checked:bg-ember/10 peer-checked:text-ember-dark">
+                  <i data-lucide="truck" class="h-5 w-5"></i>宅配
+                </span>
+              </label>
+            </div>
+          </fieldset>
+
+          <!-- 門市選擇（內用/外帶） -->
+          <div id="storeSelectWrap">
+            <label for="pickupStore" class="mb-1.5 block text-sm font-bold">取餐門市</label>
+            <select id="pickupStore" class="w-full rounded-xl border border-sand bg-white px-4 py-3 focus:border-ember focus:outline-none"></select>
+          </div>
+
+          <!-- 聯絡資訊 -->
+          <div class="space-y-4">
+            <div>
+              <label for="custName" class="mb-1.5 block text-sm font-bold">姓名 <span class="text-ember">*</span></label>
+              <input id="custName" type="text" autocomplete="name" placeholder="王小明" class="w-full rounded-xl border border-sand bg-white px-4 py-3 focus:border-ember focus:outline-none" />
+              <p class="field-error mt-1 hidden text-xs text-red-600" data-for="custName">請輸入姓名</p>
+            </div>
+            <div>
+              <label for="custPhone" class="mb-1.5 block text-sm font-bold">手機號碼 <span class="text-ember">*</span></label>
+              <input id="custPhone" type="tel" autocomplete="tel" inputmode="numeric" placeholder="0912345678" class="w-full rounded-xl border border-sand bg-white px-4 py-3 focus:border-ember focus:outline-none" />
+              <p class="field-error mt-1 hidden text-xs text-red-600" data-for="custPhone">請輸入 09 開頭的 10 碼手機號碼</p>
+            </div>
+            <div id="addressWrap" class="hidden">
+              <label for="custAddress" class="mb-1.5 block text-sm font-bold">宅配地址 <span class="text-ember">*</span></label>
+              <input id="custAddress" type="text" autocomplete="street-address" placeholder="台北市信義區松仁路 100 號" class="w-full rounded-xl border border-sand bg-white px-4 py-3 focus:border-ember focus:outline-none" />
+              <p class="field-error mt-1 hidden text-xs text-red-600" data-for="custAddress">請輸入宅配地址</p>
+            </div>
+            <div>
+              <label for="custNote" class="mb-1.5 block text-sm font-bold">備註</label>
+              <textarea id="custNote" rows="2" placeholder="例：醬料多一份、不要辣" class="w-full resize-none rounded-xl border border-sand bg-white px-4 py-3 focus:border-ember focus:outline-none"></textarea>
+            </div>
+          </div>
+
+          <!-- 訂單明細 -->
+          <div class="rounded-2xl bg-white p-4">
+            <p class="mb-2 text-sm font-bold">訂單明細</p>
+            <ul id="checkoutSummary" class="space-y-1.5 text-sm text-wood-light"></ul>
+            <div class="mt-3 space-y-1 border-t border-dashed border-sand pt-3 text-sm">
+              <div class="flex justify-between"><span>小計</span><span id="coSubtotal"></span></div>
+              <div class="flex justify-between"><span>運費</span><span id="coShipping"></span></div>
+              <div class="flex justify-between pt-1 text-base font-bold"><span>應付總額</span><span id="coTotal" class="text-ember"></span></div>
+            </div>
+          </div>
+
+          <button type="submit" class="flex w-full items-center justify-center gap-2 rounded-full bg-ember py-4 font-semibold text-white transition hover:bg-ember-dark">
+            <i data-lucide="check-circle" class="h-5 w-5"></i>確認送出訂單
+          </button>
+          <p class="text-center text-[11px] text-wood-light/70">此為模擬結帳流程，不會產生實際扣款。</p>
+        </form>
+      </div>
+
+      <!-- 步驟二：訂單已建立 -->
+      <div id="checkoutSuccessView" class="hidden px-6 py-12 text-center">
+        <div class="mx-auto grid h-20 w-20 place-items-center rounded-full bg-green-100 text-green-600">
+          <i data-lucide="check" class="h-10 w-10"></i>
+        </div>
+        <h2 class="mt-6 font-serif text-2xl font-bold">訂單已建立！</h2>
+        <p class="mt-2 text-wood-light">感謝你的訂購，我們已收到你的訂單。</p>
+        <div class="mx-auto mt-6 max-w-xs rounded-2xl bg-white p-5 text-left text-sm">
+          <div class="flex justify-between py-1"><span class="text-wood-light">訂單編號</span><span id="successOrderNo" class="font-mono font-bold"></span></div>
+          <div class="flex justify-between py-1"><span class="text-wood-light">取餐方式</span><span id="successType" class="font-bold"></span></div>
+          <div class="flex justify-between py-1"><span class="text-wood-light">付款金額</span><span id="successTotal" class="font-bold text-ember"></span></div>
+          <p id="successHint" class="mt-3 border-t border-dashed border-sand pt-3 text-xs text-wood-light"></p>
+        </div>
+        <button type="button" class="modal-close mt-8 rounded-full bg-wood px-10 py-3.5 font-semibold text-cream transition hover:bg-wood-light">繼續逛逛</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 隱私權政策 Modal -->
+  <div id="policyModal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-wood-dark/60 p-4 backdrop-blur-sm" role="dialog" aria-modal="true">
+    <div class="fade-up max-h-[80vh] w-full max-w-lg overflow-y-auto rounded-3xl bg-cream p-6 shadow-2xl sm:p-8">
+      <div class="flex items-start justify-between gap-4">
+        <h2 id="policyTitle" class="font-serif text-xl font-bold"></h2>
+        <button id="policyClose" type="button" class="grid h-9 w-9 shrink-0 place-items-center rounded-full hover:bg-cream-dark" aria-label="關閉"><i data-lucide="x" class="h-5 w-5"></i></button>
+      </div>
+      <div id="policyBody" class="mt-4 space-y-3 text-sm leading-relaxed text-wood-light"></div>
+    </div>
+  </div>
+
+  <!-- Toast 通知容器 -->
+  <div id="toastContainer" class="pointer-events-none fixed bottom-5 left-1/2 z-[70] flex w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 flex-col gap-2 sm:left-auto sm:right-6 sm:translate-x-0" aria-live="polite"></div>
+
+  <!-- ===================================================== -->
+  <!-- JavaScript（Vanilla JS）                               -->
+  <!-- ===================================================== -->
+  <script>
+  (function () {
+    'use strict';
+
+    /* ---------- 圖片載入失敗時的備援佔位圖 ---------- */
+    const FALLBACK_IMG = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(
+      '<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">' +
+      '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#EFE5D6"/><stop offset="1" stop-color="#E2D3BE"/></linearGradient></defs>' +
+      '<rect width="800" height="600" fill="url(#g)"/>' +
+      '<path d="M260 340c30-90 105-135 140-135s110 45 140 135z" fill="#F0A15E"/>' +
+      '<path d="M250 340h300" stroke="#B55B19" stroke-width="14" stroke-linecap="round"/>' +
+      '<path d="M330 270l18 30M400 245v40M470 270l-18 30" stroke="#B55B19" stroke-width="10" stroke-linecap="round"/>' +
+      '<text x="400" y="420" text-anchor="middle" font-family="sans-serif" font-size="28" fill="#5A4134">禾煎 HÉ JIAN</text></svg>'
+    );
+    function attachFallback(img) {
+      img.addEventListener('error', function onErr() {
+        img.removeEventListener('error', onErr);
+        img.src = FALLBACK_IMG;
+      });
+    }
+    document.querySelectorAll('img.fallback-img').forEach(attachFallback);
+
+    /* ---------- 小工具 ---------- */
+    const $  = (sel, root = document) => root.querySelector(sel);
+    const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+    const money = n => 'NT$' + n.toLocaleString('zh-TW');
+    const refreshIcons = () => { if (window.lucide) window.lucide.createIcons(); };
+    const escapeHTML = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const unsplash = (id, w = 800) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=80`;
+
+    /* ---------- 資料：菜單 ---------- */
+    const CATEGORIES = [
+      { key: 'potsticker', label: '招牌鍋貼', icon: 'flame' },
+      { key: 'dumpling',   label: '精選水餃', icon: 'soup' },
+      { key: 'drink',      label: '湯品/飲料', icon: 'cup-soda' },
+      { key: 'side',       label: '經典小菜', icon: 'salad' }
+    ];
+
+    const MENU = [
+      // 招牌鍋貼
+      { id: 'p1', cat: 'potsticker', name: '招牌豬肉鍋貼', desc: '台灣溫體豬＋高麗菜，冰花酥底，一口爆汁。', price: 80, unit: '10 顆', tags: ['人氣', '爆汁'], spicy: 0, img: unsplash('1496116218417-1a781b1c416c') },
+      { id: 'p2', cat: 'potsticker', name: '韭菜蝦仁鍋貼', desc: '整尾鮮蝦仁搭配當季韭菜，鮮甜清爽。', price: 110, unit: '10 顆', tags: ['主廚推薦'], spicy: 0, img: unsplash('1534422298391-e4f8c172dddb') },
+      { id: 'p3', cat: 'potsticker', name: '麻辣牛肉鍋貼', desc: '澳洲牛肩肉拌自製麻辣醬，香麻過癮。', price: 120, unit: '10 顆', tags: ['爆汁'], spicy: 3, img: unsplash('1541696432-82c6da8ce7bf') },
+      { id: 'p4', cat: 'potsticker', name: '起司玉米鍋貼', desc: '牽絲莫札瑞拉起司與甜玉米，小朋友最愛。', price: 100, unit: '10 顆', tags: ['新品'], spicy: 0, img: unsplash('1563245372-f21724e3856d') },
+      { id: 'p5', cat: 'potsticker', name: '蔬食香菇鍋貼', desc: '香菇、豆干、青江菜，蛋奶素可食。', price: 90, unit: '10 顆', tags: ['素食'], spicy: 0, img: unsplash('1606525437679-037aca74a3e9') },
+      { id: 'p6', cat: 'potsticker', name: '泡菜豬肉鍋貼', desc: '自家熟成韓式泡菜，酸香微辣超下飯。', price: 95, unit: '10 顆', tags: ['人氣'], spicy: 1, img: unsplash('1585032226651-759b368d7246') },
+      // 精選水餃
+      { id: 'd1', cat: 'dumpling', name: '高麗菜豬肉水餃', desc: '經典不敗口味，皮Q餡多汁。', price: 75, unit: '10 顆', tags: ['人氣'], spicy: 0, img: unsplash('1534422298391-e4f8c172dddb') },
+      { id: 'd2', cat: 'dumpling', name: '鮮蝦玉米水餃', desc: '鮮蝦與甜玉米的清甜組合。', price: 105, unit: '10 顆', tags: ['主廚推薦'], spicy: 0, img: unsplash('1563245372-f21724e3856d') },
+      { id: 'd3', cat: 'dumpling', name: '紅油抄手', desc: '四川紅油、花椒粉與蒜泥，香辣麻。', price: 90, unit: '8 顆', tags: ['爆汁'], spicy: 2, img: unsplash('1496116218417-1a781b1c416c') },
+      // 湯品 / 飲料
+      { id: 'b1', cat: 'drink', name: '酸辣湯', desc: '豆腐、木耳、筍絲，胡椒與黑醋恰到好處。', price: 45, unit: '一碗', tags: ['人氣'], spicy: 1, img: unsplash('1547592180-85f173990554') },
+      { id: 'b2', cat: 'drink', name: '玉米蛋花湯', desc: '濃郁玉米甜湯，溫潤順口。', price: 40, unit: '一碗', tags: [], spicy: 0, img: unsplash('1476718406336-bb5a9690ee2a') },
+      { id: 'b3', cat: 'drink', name: '古早味紅茶', desc: '鐵鍋炒糖熬煮，微甜回甘。', price: 30, unit: '500ml', tags: ['人氣'], spicy: 0, img: unsplash('1544145945-f90425340c7e') },
+      { id: 'b4', cat: 'drink', name: '手工無糖豆漿', desc: '非基改黃豆每日現磨，可選冰/熱。', price: 35, unit: '500ml', tags: ['健康'], spicy: 0, img: unsplash('1550583724-b2692b85b150') },
+      // 經典小菜
+      { id: 's1', cat: 'side', name: '涼拌小黃瓜', desc: '蒜香拍黃瓜，爽脆開胃。', price: 40, unit: '一份', tags: ['素食'], spicy: 1, img: unsplash('1540189549336-e6e99c3679fe') },
+      { id: 's2', cat: 'side', name: '滷味拼盤', desc: '豆干、海帶、滷蛋，老滷汁慢燉。', price: 70, unit: '一份', tags: ['人氣'], spicy: 0, img: unsplash('1512058564366-18510be2db19') },
+      { id: 's3', cat: 'side', name: '皮蛋豆腐', desc: '嫩豆腐淋上特調醬油膏與肉鬆。', price: 50, unit: '一份', tags: [], spicy: 0, img: unsplash('1504674900247-0877df9cc836') }
+    ];
+
+    /* ---------- 資料：冷凍禮盒 ---------- */
+    const GIFTS = [
+      { id: 'g1', name: '家庭常備組', desc: '招牌豬肉鍋貼 30 入 ＋ 高麗菜水餃 30 入，冷凍庫必備。', price: 520, origin: 600, count: '60 入', badge: '', img: unsplash('1496116218417-1a781b1c416c') },
+      { id: 'g2', name: '招財鍋貼禮盒', desc: '四種口味各 12–13 入共 50 入，附手寫賀卡與招財紅提袋。', price: 880, origin: 1000, count: '50 入', badge: '熱銷 No.1', img: unsplash('1513885535751-8b9238bd345a') },
+      { id: 'g3', name: '節慶團圓雙層禮盒', desc: '鍋貼＋水餃＋紅油抄手共 100 入，附獨門沾醬 3 瓶。', price: 1580, origin: 1880, count: '100 入', badge: '年節限定', img: unsplash('1563245372-f21724e3856d') }
+    ];
+
+    /* ---------- 資料：門市 ---------- */
+    const STORES = [
+      { id: 'flagship', name: '永康旗艦店', tag: '旗艦店', address: '台北市大安區永康街 12 號', phone: '02-2345-6789',
+        hours: [['週一至週五', '11:00 – 21:00'], ['週六、週日', '10:30 – 21:30']], features: ['內用 60 席', '開放式煎台', '禮盒現貨'],
+        platforms: ['ubereats', 'foodpanda'], query: '台北市大安區永康街12號' },
+      { id: 'xinyi', name: '信義店', tag: '商圈店', address: '台北市信義區松仁路 100 號 B1', phone: '02-2720-1234',
+        hours: [['週一至週五', '11:00 – 21:30'], ['週六、週日', '11:00 – 22:00']], features: ['內用 32 席', '商務外帶快速取餐'],
+        platforms: ['ubereats', 'foodpanda'], query: '台北市信義區松仁路100號' },
+      { id: 'banqiao', name: '板橋府中店', tag: '社區店', address: '新北市板橋區府中路 58 號', phone: '02-2960-5678',
+        hours: [['週二至週日', '11:00 – 20:30'], ['週一', '公休']], features: ['外帶為主', '冷凍禮盒預購'],
+        platforms: ['foodpanda'], query: '新北市板橋區府中路58號' },
+      { id: 'taichung', name: '台中勤美店', tag: '中部首店', address: '台中市西區公益路 68 號', phone: '04-2301-2468',
+        hours: [['每日', '11:00 – 21:00']], features: ['內用 40 席', '親子友善'],
+        platforms: ['ubereats', 'foodpanda'], query: '台中市西區公益路68號' }
+    ];
+
+    /* ---------- 資料：FAQ ---------- */
+    const FAQS = [
+      { q: '線上點餐後，大約多久可以取餐？', a: '所有餐點皆現點現煎，內用與外帶約 10–15 分鐘完成。尖峰時段（12:00–13:00、18:00–19:00）可能需要 20 分鐘，送出訂單後會以簡訊通知取餐時間。' },
+      { q: '冷凍禮盒要怎麼保存？可以放多久？', a: '收到後請立即放入冷凍庫（-18°C 以下），未開封可保存 60 天。開封後建議 14 天內食用完畢，並以夾鏈袋密封避免結霜。' },
+      { q: '冷凍鍋貼要怎麼煎才會酥脆？', a: '免退冰！平底鍋加少許油，排入鍋貼後開中火 1 分鐘，倒入約 1/3 高度的麵粉水（附贈煎粉包），蓋上鍋蓋煎 6 分鐘，開蓋待水分收乾、底部呈金黃色即可，總共約 8 分鐘。' },
+      { q: '宅配的運費與配送範圍？', a: '冷凍宅配範圍為台灣本島，單筆運費 NT$150，消費滿 NT$1,500 免運。離島地區暫不提供冷凍配送，敬請見諒。' },
+      { q: '有提供外送服務嗎？', a: '各門市皆與 Uber Eats 或 foodpanda 合作，可直接於平台搜尋「禾煎鍋貼」下單。外送價格依平台公告為準。' },
+      { q: '可以大量訂購或企業團購嗎？', a: '可以！單筆 300 顆以上或企業團購，請於 3 天前來電客服專線 0800-123-456 預訂，享有團購優惠價。' }
+    ];
+
+    const POLICIES = {
+      privacy: { title: '隱私權政策', body: [
+        '禾煎鍋貼（以下稱「本公司」）重視您的個人資料保護，並依《個人資料保護法》蒐集、處理及利用您的個人資料。',
+        '我們僅於您訂購商品、訂閱電子報或聯繫客服時，蒐集您的姓名、電話、Email 與配送地址，用於訂單處理、配送及行銷通知。',
+        '除依法令要求或為完成配送所必須（如物流業者）外，本公司不會將您的個人資料提供給第三方。',
+        '您可隨時來信 hello@hejian.tw 查詢、更正或要求刪除您的個人資料，或取消訂閱電子報。'
+      ] },
+      terms: { title: '服務條款', body: [
+        '本網站之線上點餐為示範用途之模擬流程，送出訂單不會產生實際交易或扣款。',
+        '商品圖片僅供參考，實際內容以門市供應為準。價格如有變動，以門市現場公告為準。',
+        '冷凍商品屬易腐敗食品，依《消費者保護法》規定，不適用七天鑑賞期退換貨；如商品瑕疵，請於收貨 24 小時內聯繫客服。'
+      ] }
+    };
+
+    /* =====================================================
+       Header：捲動後改變樣式、手機選單
+       ===================================================== */
+    const header = $('#siteHeader');
+    const mobileMenu = $('#mobileMenu');
+    const menuToggle = $('#menuToggle');
+
+    function updateHeader() {
+      const scrolled = window.scrollY > 40 || !mobileMenu.classList.contains('hidden');
+      header.classList.toggle('bg-cream/95', scrolled);
+      header.classList.toggle('backdrop-blur', scrolled);
+      header.classList.toggle('shadow-soft', scrolled);
+      $('#logoText').classList.toggle('text-cream', !scrolled);
+      $('#logoText').classList.toggle('text-wood', scrolled);
+      $('#logoSub').classList.toggle('text-cream/70', !scrolled);
+      $('#logoSub').classList.toggle('text-wood-light', scrolled);
+      $('#desktopNav').classList.toggle('text-cream/90', !scrolled);
+      $('#desktopNav').classList.toggle('text-wood', scrolled);
+      [$('#cartBtn'), menuToggle].forEach(btn => {
+        btn.classList.toggle('text-cream', !scrolled);
+        btn.classList.toggle('text-wood', scrolled);
+        btn.classList.toggle('hover:bg-white/10', !scrolled);
+        btn.classList.toggle('hover:bg-cream-dark', scrolled);
+      });
+    }
+    window.addEventListener('scroll', updateHeader, { passive: true });
+
+    function setMobileMenu(open) {
+      mobileMenu.classList.toggle('hidden', !open);
+      menuToggle.setAttribute('aria-expanded', String(open));
+      menuToggle.innerHTML = `<i data-lucide="${open ? 'x' : 'menu'}" class="h-6 w-6"></i>`;
+      refreshIcons();
+      updateHeader();
+    }
+    menuToggle.addEventListener('click', () => setMobileMenu(mobileMenu.classList.contains('hidden')));
+    $$('.mobile-link').forEach(a => a.addEventListener('click', () => setMobileMenu(false)));
+    window.addEventListener('resize', () => { if (window.innerWidth >= 1024) setMobileMenu(false); });
+
+    /* =====================================================
+       數字計數動畫（進入畫面時觸發）
+       ===================================================== */
+    const counters = $$('.counter');
+    const animateCounter = el => {
+      const target = Number(el.dataset.target);
+      const duration = 1400;
+      const start = performance.now();
+      const tick = now => {
+        const p = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(target * eased).toLocaleString('zh-TW');
+        if (p < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    };
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) { animateCounter(e.target); io.unobserve(e.target); } });
+      }, { threshold: 0.5 });
+      counters.forEach(c => io.observe(c));
+    } else {
+      counters.forEach(c => { c.textContent = Number(c.dataset.target).toLocaleString('zh-TW'); });
+    }
+
+    /* =====================================================
+       菜單：分類 Tab ＋ 產品卡片
+       ===================================================== */
+    let activeCat = CATEGORIES[0].key;
+
+    const TAG_STYLE = {
+      '人氣': 'bg-ember text-white',
+      '爆汁': 'bg-wood text-cream',
+      '主廚推薦': 'bg-amber-100 text-amber-800',
+      '新品': 'bg-emerald-100 text-emerald-800',
+      '素食': 'bg-lime-100 text-lime-800',
+      '健康': 'bg-sky-100 text-sky-800'
+    };
+
+    function spicyHTML(level) {
+      if (!level) return '';
+      let peppers = '';
+      for (let i = 0; i < 3; i++) {
+        peppers += `<i data-lucide="flame" class="h-3.5 w-3.5 ${i < level ? 'text-red-500' : 'text-sand'}"></i>`;
+      }
+      const label = ['', '小辣', '中辣', '大辣'][level];
+      return `<span class="inline-flex items-center gap-0.5 text-xs text-red-600" title="辣度：${label}">${peppers}<span class="ml-1">${label}</span></span>`;
+    }
+
+    function renderTabs() {
+      $('#menuTabs').innerHTML = CATEGORIES.map(c => `
+        <button type="button" role="tab" aria-selected="${c.key === activeCat}" data-cat="${c.key}"
+          class="menu-tab inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-4 py-2.5 text-sm font-semibold transition sm:px-5
+          ${c.key === activeCat ? 'bg-wood text-cream shadow' : 'text-wood-light hover:bg-cream-dark'}">
+          <i data-lucide="${c.icon}" class="h-4 w-4"></i>${c.label}
+        </button>`).join('');
+    }
+
+    function renderMenu() {
+      const items = MENU.filter(m => m.cat === activeCat);
+      $('#menuGrid').innerHTML = items.map((m, i) => `
+        <article class="fade-up group flex flex-col overflow-hidden rounded-3xl bg-cream shadow-soft transition hover:-translate-y-1" style="animation-delay:${i * 60}ms">
+          <div class="relative overflow-hidden">
+            <img src="${m.img}" alt="${escapeHTML(m.name)}" loading="lazy" class="menu-img aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-105" />
+            <div class="absolute left-3 top-3 flex flex-wrap gap-1.5">
+              ${m.tags.map(t => `<span class="rounded-full px-2.5 py-1 text-[11px] font-bold ${TAG_STYLE[t] || 'bg-white text-wood'}">${t}</span>`).join('')}
+            </div>
+          </div>
+          <div class="flex flex-1 flex-col p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="font-serif text-lg font-bold">${escapeHTML(m.name)}</h3>
+              <p class="shrink-0 font-serif text-xl font-black text-ember">${money(m.price)}</p>
+            </div>
+            <p class="mt-1 text-xs text-wood-light/80">${m.unit}</p>
+            <p class="mt-2 flex-1 text-sm leading-relaxed text-wood-light">${escapeHTML(m.desc)}</p>
+            <div class="mt-4 flex items-center justify-between gap-3">
+              <div class="min-h-[20px]">${spicyHTML(m.spicy)}</div>
+              <button type="button" data-add="${m.id}" class="add-btn inline-flex items-center gap-1.5 rounded-full bg-wood px-4 py-2.5 text-sm font-semibold text-cream transition hover:bg-ember active:scale-95">
+                <i data-lucide="plus" class="h-4 w-4"></i>加入購物車
+              </button>
+            </div>
+          </div>
+        </article>`).join('');
+      $$('#menuGrid img.menu-img').forEach(attachFallback);
+      refreshIcons();
+    }
+
+    $('#menuTabs').addEventListener('click', e => {
+      const btn = e.target.closest('.menu-tab');
+      if (!btn || btn.dataset.cat === activeCat) return;
+      activeCat = btn.dataset.cat;
+      renderTabs();
+      renderMenu();
+    });
+
+    /* =====================================================
+       冷凍禮盒卡片
+       ===================================================== */
+    function renderGifts() {
+      $('#giftGrid').innerHTML = GIFTS.map(g => `
+        <article class="group flex flex-col overflow-hidden rounded-3xl bg-cream text-wood shadow-soft">
+          <div class="relative overflow-hidden">
+            <img src="${g.img}" alt="${escapeHTML(g.name)}" loading="lazy" class="gift-img aspect-[16/10] w-full object-cover transition duration-500 group-hover:scale-105" />
+            ${g.badge ? `<span class="absolute left-4 top-4 rounded-full bg-ember px-3 py-1 text-xs font-bold text-white">${g.badge}</span>` : ''}
+            <span class="absolute bottom-4 right-4 rounded-full bg-wood/85 px-3 py-1 text-xs font-bold text-cream backdrop-blur">${g.count}</span>
+          </div>
+          <div class="flex flex-1 flex-col p-6">
+            <h3 class="font-serif text-xl font-bold">${escapeHTML(g.name)}</h3>
+            <p class="mt-2 flex-1 text-sm leading-relaxed text-wood-light">${escapeHTML(g.desc)}</p>
+            <div class="mt-5 flex items-baseline gap-2">
+              <span class="font-serif text-2xl font-black text-ember">${money(g.price)}</span>
+              <span class="text-sm text-wood-light/60 line-through">${money(g.origin)}</span>
+            </div>
+            <div class="mt-5 grid grid-cols-2 gap-2">
+              <button type="button" data-add="${g.id}" class="add-btn inline-flex items-center justify-center gap-1.5 rounded-full border-2 border-wood py-3 text-sm font-semibold transition hover:bg-wood hover:text-cream">
+                <i data-lucide="shopping-cart" class="h-4 w-4"></i>加入購物車
+              </button>
+              <button type="button" data-buy="${g.id}" class="inline-flex items-center justify-center gap-1.5 rounded-full bg-ember py-3 text-sm font-semibold text-white transition hover:bg-ember-dark">
+                <i data-lucide="zap" class="h-4 w-4"></i>直接購買
+              </button>
+            </div>
+          </div>
+        </article>`).join('');
+      $$('#giftGrid img.gift-img').forEach(attachFallback);
+    }
+
+    /* =====================================================
+       門市切換
+       ===================================================== */
+    let activeStore = STORES[0].id;
+    const PLATFORM_BADGE = {
+      ubereats:  '<span class="inline-flex items-center gap-1 rounded-lg bg-black px-3 py-1.5 text-xs font-bold text-white">Uber<span class="text-[#06C167]">Eats</span></span>',
+      foodpanda: '<span class="inline-flex items-center gap-1 rounded-lg bg-[#D70F64] px-3 py-1.5 text-xs font-bold text-white">foodpanda</span>'
+    };
+
+    function isOpenNow(store) {
+      // 簡易判斷：以第一組時段的開關門時間為準（週一公休店例外處理）
+      const now = new Date();
+      if (store.id === 'banqiao' && now.getDay() === 1) return false;
+      const isWeekend = now.getDay() === 0 || now.getDay() === 6;
+      const slot = (store.hours.length > 1 && isWeekend && store.id !== 'banqiao') ? store.hours[1][1] : store.hours[0][1];
+      const m = slot.match(/(\d{2}):(\d{2})\s*–\s*(\d{2}):(\d{2})/);
+      if (!m) return false;
+      const mins = now.getHours() * 60 + now.getMinutes();
+      return mins >= (+m[1] * 60 + +m[2]) && mins < (+m[3] * 60 + +m[4]);
+    }
+
+    function renderStores() {
+      $('#storeList').innerHTML = STORES.map(s => {
+        const active = s.id === activeStore;
+        return `
+        <button type="button" role="tab" aria-selected="${active}" data-store="${s.id}"
+          class="store-card w-64 shrink-0 rounded-2xl border-2 p-5 text-left transition lg:w-auto
+          ${active ? 'border-ember bg-white shadow-soft' : 'border-transparent bg-white/60 hover:bg-white'}">
+          <div class="flex items-center justify-between gap-2">
+            <span class="font-serif text-lg font-bold">${s.name}</span>
+            <span class="rounded-full ${active ? 'bg-ember text-white' : 'bg-cream-dark text-wood-light'} px-2.5 py-0.5 text-[11px] font-bold">${s.tag}</span>
+          </div>
+          <p class="mt-2 flex items-start gap-1.5 text-sm text-wood-light"><i data-lucide="map-pin" class="mt-0.5 h-4 w-4 shrink-0"></i>${s.address}</p>
+        </button>`;
+      }).join('');
+
+      const s = STORES.find(x => x.id === activeStore);
+      const open = isOpenNow(s);
+      const mapsLink = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(s.query);
+      $('#storeMap').src = 'https://maps.google.com/maps?q=' + encodeURIComponent(s.query) + '&z=16&output=embed';
+      $('#mapUrlText').textContent = 'maps.google.com · ' + s.address;
+
+      $('#storeDetail').innerHTML = `
+        <div class="flex flex-wrap items-center gap-3">
+          <h3 class="font-serif text-2xl font-bold">${s.name}</h3>
+          <span class="inline-flex items-center gap-1.5 rounded-full ${open ? 'bg-green-100 text-green-700' : 'bg-stone-200 text-stone-600'} px-3 py-1 text-xs font-bold">
+            <span class="h-2 w-2 rounded-full ${open ? 'bg-green-500 animate-pulse' : 'bg-stone-400'}"></span>${open ? '營業中' : '休息中'}
+          </span>
+        </div>
+        <div class="mt-5 grid gap-6 sm:grid-cols-2">
+          <div class="space-y-3 text-sm">
+            <p class="flex gap-2"><i data-lucide="map-pin" class="h-4 w-4 shrink-0 text-ember"></i>${s.address}</p>
+            <p class="flex gap-2"><i data-lucide="phone" class="h-4 w-4 shrink-0 text-ember"></i><a href="tel:${s.phone.replace(/-/g, '')}" class="hover:text-ember">${s.phone}</a></p>
+            <div class="flex flex-wrap gap-1.5 pt-1">${s.features.map(f => `<span class="rounded-full bg-cream px-2.5 py-1 text-xs text-wood-light">${f}</span>`).join('')}</div>
+          </div>
+          <div>
+            <p class="mb-2 flex items-center gap-2 text-sm font-bold"><i data-lucide="clock" class="h-4 w-4 text-ember"></i>營業時間</p>
+            <dl class="space-y-1 text-sm">
+              ${s.hours.map(h => `<div class="flex justify-between gap-4 border-b border-dashed border-sand py-1"><dt class="text-wood-light">${h[0]}</dt><dd class="font-medium">${h[1]}</dd></div>`).join('')}
+            </dl>
+          </div>
+        </div>
+        <div class="mt-6 flex flex-col gap-4 border-t border-sand pt-5 sm:flex-row sm:items-center sm:justify-between">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="text-xs text-wood-light">外送合作：</span>${s.platforms.map(p => PLATFORM_BADGE[p]).join('')}
+          </div>
+          <a href="${mapsLink}" target="_blank" rel="noopener" class="inline-flex items-center justify-center gap-1.5 rounded-full bg-wood px-5 py-2.5 text-sm font-semibold text-cream transition hover:bg-ember">
+            <i data-lucide="navigation" class="h-4 w-4"></i>開啟導航
+          </a>
+        </div>`;
+      refreshIcons();
+    }
+
+    $('#storeList').addEventListener('click', e => {
+      const btn = e.target.closest('.store-card');
+      if (!btn || btn.dataset.store === activeStore) return;
+      activeStore = btn.dataset.store;
+      renderStores();
+    });
+
+    /* =====================================================
+       FAQ 手風琴
+       ===================================================== */
+    function renderFAQ() {
+      $('#faqList').innerHTML = FAQS.map((f, i) => `
+        <div class="faq-item overflow-hidden rounded-2xl bg-cream shadow-soft">
+          <button type="button" class="faq-btn flex w-full items-center justify-between gap-4 px-6 py-5 text-left font-bold" aria-expanded="false" aria-controls="faq-${i}">
+            <span class="flex items-start gap-3"><span class="font-serif text-ember">Q.</span>${f.q}</span>
+            <span class="faq-icon grid h-8 w-8 shrink-0 place-items-center rounded-full bg-cream-dark"><i data-lucide="plus" class="h-4 w-4"></i></span>
+          </button>
+          <div id="faq-${i}" class="faq-body" role="region">
+            <div class="overflow-hidden"><p class="px-6 pb-6 pl-[3.25rem] text-sm leading-relaxed text-wood-light">${f.a}</p></div>
+          </div>
+        </div>`).join('');
+    }
+    $('#faqList').addEventListener('click', e => {
+      const btn = e.target.closest('.faq-btn');
+      if (!btn) return;
+      const item = btn.closest('.faq-item');
+      const willOpen = !item.classList.contains('open');
+      // 一次只展開一題
+      $$('.faq-item').forEach(el => { el.classList.remove('open'); $('.faq-btn', el).setAttribute('aria-expanded', 'false'); });
+      if (willOpen) { item.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); }
+    });
+
+    /* =====================================================
+       Toast 通知
+       ===================================================== */
+    function toast(message, icon = 'check-circle') {
+      const el = document.createElement('div');
+      el.className = 'toast-in pointer-events-auto flex items-center gap-3 rounded-2xl bg-wood px-4 py-3.5 text-sm text-cream shadow-2xl';
+      el.innerHTML = `<span class="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-ember"><i data-lucide="${icon}" class="h-4 w-4"></i></span><span class="flex-1">${message}</span>`;
+      $('#toastContainer').appendChild(el);
+      refreshIcons();
+      setTimeout(() => {
+        el.style.transition = 'opacity .3s, transform .3s';
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(8px)';
+        setTimeout(() => el.remove(), 300);
+      }, 2400);
+    }
+
+    /* =====================================================
+       購物車
+       ===================================================== */
+    const STORAGE_KEY = 'hejian_cart_v1';
+    const ALL_PRODUCTS = [...MENU, ...GIFTS];
+    let cart = [];
+
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      if (Array.isArray(saved)) cart = saved.filter(i => ALL_PRODUCTS.some(p => p.id === i.id) && i.qty > 0);
+    } catch (err) { cart = []; }
+
+    function saveCart() {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(cart)); } catch (err) { /* 瀏覽器不支援儲存時忽略 */ }
+    }
+    const findProduct = id => ALL_PRODUCTS.find(p => p.id === id);
+    const cartQty = () => cart.reduce((s, i) => s + i.qty, 0);
+    const cartSubtotal = () => cart.reduce((s, i) => s + findProduct(i.id).price * i.qty, 0);
+
+    function addToCart(id, qty = 1, silent = false) {
+      const p = findProduct(id);
+      if (!p) return;
+      const line = cart.find(i => i.id === id);
+      if (line) line.qty = Math.min(line.qty + qty, 99);
+      else cart.push({ id, qty });
+      saveCart();
+      renderCart();
+      const badge = $('#cartBadge');
+      badge.classList.remove('badge-pop'); void badge.offsetWidth; badge.classList.add('badge-pop');
+      if (!silent) toast(`已將「${escapeHTML(p.name)}」加入購物車`, 'shopping-bag');
+    }
+
+    function changeQty(id, delta) {
+      const line = cart.find(i => i.id === id);
+      if (!line) return;
+      line.qty += delta;
+      if (line.qty <= 0) cart = cart.filter(i => i.id !== id);
+      if (line.qty > 99) line.qty = 99;
+      saveCart();
+      renderCart();
+    }
+
+    function removeItem(id) {
+      const p = findProduct(id);
+      cart = cart.filter(i => i.id !== id);
+      saveCart();
+      renderCart();
+      toast(`已移除「${escapeHTML(p.name)}」`, 'trash-2');
+    }
+
+    function renderCart() {
+      const qty = cartQty();
+      const badge = $('#cartBadge');
+      badge.textContent = qty > 99 ? '99+' : qty;
+      badge.classList.toggle('hidden', qty === 0);
+
+      const box = $('#cartItems');
+      if (!cart.length) {
+        box.innerHTML = `
+          <div class="flex h-full flex-col items-center justify-center py-16 text-center">
+            <div class="grid h-20 w-20 place-items-center rounded-full bg-cream-dark text-wood-light"><i data-lucide="shopping-bag" class="h-9 w-9"></i></div>
+            <p class="mt-5 font-bold">購物車還是空的</p>
+            <p class="mt-1 text-sm text-wood-light">來點一份剛起鍋的招牌鍋貼吧！</p>
+            <a href="#menu" id="emptyCartLink" class="mt-6 rounded-full bg-ember px-6 py-3 text-sm font-semibold text-white">去逛菜單</a>
+          </div>`;
+      } else {
+        box.innerHTML = cart.map(i => {
+          const p = findProduct(i.id);
+          return `
+          <div class="flex gap-4 border-b border-sand py-4 last:border-0">
+            <img src="${p.img}" alt="" class="cart-img h-20 w-20 shrink-0 rounded-xl object-cover" />
+            <div class="flex flex-1 flex-col">
+              <div class="flex items-start justify-between gap-2">
+                <div><p class="font-bold leading-snug">${escapeHTML(p.name)}</p><p class="text-xs text-wood-light">${money(p.price)} / ${p.unit || p.count}</p></div>
+                <button type="button" data-remove="${p.id}" class="grid h-8 w-8 shrink-0 place-items-center rounded-full text-wood-light hover:bg-red-50 hover:text-red-600" aria-label="刪除 ${escapeHTML(p.name)}">
+                  <i data-lucide="trash-2" class="h-4 w-4"></i>
+                </button>
+              </div>
+              <div class="mt-auto flex items-center justify-between pt-2">
+                <div class="inline-flex items-center rounded-full border border-sand bg-white">
+                  <button type="button" data-dec="${p.id}" class="grid h-8 w-8 place-items-center rounded-full hover:bg-cream-dark" aria-label="減少數量"><i data-lucide="minus" class="h-3.5 w-3.5"></i></button>
+                  <span class="w-8 text-center text-sm font-bold">${i.qty}</span>
+                  <button type="button" data-inc="${p.id}" class="grid h-8 w-8 place-items-center rounded-full hover:bg-cream-dark" aria-label="增加數量"><i data-lucide="plus" class="h-3.5 w-3.5"></i></button>
+                </div>
+                <span class="font-bold text-ember">${money(p.price * i.qty)}</span>
+              </div>
+            </div>
+          </div>`;
+        }).join('');
+        $$('#cartItems img.cart-img').forEach(attachFallback);
+      }
+
+      const sub = cartSubtotal();
+      $('#cartSubtotal').textContent = money(sub);
+      $('#cartCount').textContent = qty + ' 件';
+      $('#cartTotal').textContent = money(sub);
+      $('#checkoutBtn').disabled = cart.length === 0;
+      refreshIcons();
+    }
+
+    // 購物車內的 +/-/刪除（事件委派）
+    $('#cartItems').addEventListener('click', e => {
+      const t = e.target.closest('button, a');
+      if (!t) return;
+      if (t.dataset.inc) changeQty(t.dataset.inc, 1);
+      else if (t.dataset.dec) changeQty(t.dataset.dec, -1);
+      else if (t.dataset.remove) removeItem(t.dataset.remove);
+      else if (t.id === 'emptyCartLink') closeCart();
+    });
+
+    // 全站「加入購物車」與「直接購買」
+    document.addEventListener('click', e => {
+      const add = e.target.closest('[data-add]');
+      if (add) { addToCart(add.dataset.add); return; }
+      const buy = e.target.closest('[data-buy]');
+      if (buy) { addToCart(buy.dataset.buy, 1, true); openCheckout('delivery'); }
+    });
+
+    /* ---------- 抽屜開關 ---------- */
+    const drawer = $('#cartDrawer');
+    const overlay = $('#cartOverlay');
+    function openCart() {
+      overlay.classList.remove('hidden');
+      requestAnimationFrame(() => drawer.classList.remove('translate-x-full'));
+      drawer.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('lock');
+      setMobileMenu(false);
+    }
+    function closeCart() {
+      drawer.classList.add('translate-x-full');
+      drawer.setAttribute('aria-hidden', 'true');
+      overlay.classList.add('hidden');
+      if ($('#checkoutModal').classList.contains('hidden')) document.body.classList.remove('lock');
+    }
+    $('#cartBtn').addEventListener('click', openCart);
+    $('#cartClose').addEventListener('click', closeCart);
+    overlay.addEventListener('click', closeCart);
+
+    /* =====================================================
+       結帳流程
+       ===================================================== */
+    const modal = $('#checkoutModal');
+    const form = $('#checkoutForm');
+    const SHIPPING_FEE = 150;
+    const FREE_SHIPPING = 1500;
+    const TYPE_LABEL = { dine: '內用', takeout: '外帶', delivery: '冷凍宅配' };
+
+    $('#pickupStore').innerHTML = STORES.map(s => `<option value="${s.id}">${s.name}｜${s.address}</option>`).join('');
+
+    const currentType = () => form.querySelector('input[name="orderType"]:checked').value;
+    const shippingFor = (type, sub) => (type === 'delivery' && sub < FREE_SHIPPING) ? SHIPPING_FEE : 0;
+
+    function updateCheckoutSummary() {
+      const type = currentType();
+      const sub = cartSubtotal();
+      const ship = shippingFor(type, sub);
+      $('#addressWrap').classList.toggle('hidden', type !== 'delivery');
+      $('#storeSelectWrap').classList.toggle('hidden', type === 'delivery');
+      $('#checkoutSummary').innerHTML = cart.map(i => {
+        const p = findProduct(i.id);
+        return `<li class="flex justify-between gap-3"><span>${escapeHTML(p.name)} × ${i.qty}</span><span>${money(p.price * i.qty)}</span></li>`;
+      }).join('');
+      $('#coSubtotal').textContent = money(sub);
+      $('#coShipping').textContent = type !== 'delivery' ? '—' : (ship ? money(ship) : '免運');
+      $('#coTotal').textContent = money(sub + ship);
+    }
+    form.addEventListener('change', e => { if (e.target.name === 'orderType') updateCheckoutSummary(); });
+
+    function showModal(el) { el.classList.remove('hidden'); el.classList.add('flex'); document.body.classList.add('lock'); }
+    function hideModal(el) { el.classList.add('hidden'); el.classList.remove('flex'); if (drawer.classList.contains('translate-x-full')) document.body.classList.remove('lock'); }
+
+    function openCheckout(presetType) {
+      if (!cart.length) return;
+      closeCart();
+      $('#checkoutFormView').classList.remove('hidden');
+      $('#checkoutSuccessView').classList.add('hidden');
+      if (presetType) form.querySelector(`input[name="orderType"][value="${presetType}"]`).checked = true;
+      $$('.field-error').forEach(el => el.classList.add('hidden'));
+      updateCheckoutSummary();
+      showModal(modal);
+      refreshIcons();
+    }
+    $('#checkoutBtn').addEventListener('click', () => openCheckout());
+    $$('.modal-close', modal).forEach(b => b.addEventListener('click', () => hideModal(modal)));
+    modal.addEventListener('click', e => { if (e.target === modal) hideModal(modal); });
+
+    function setError(id, show) {
+      $(`.field-error[data-for="${id}"]`).classList.toggle('hidden', !show);
+      $('#' + id).classList.toggle('border-red-400', show);
+    }
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const type = currentType();
+      const name = $('#custName').value.trim();
+      const phone = $('#custPhone').value.replace(/[\s-]/g, '');
+      const address = $('#custAddress').value.trim();
+
+      const nameOk = name.length > 0;
+      const phoneOk = /^09\d{8}$/.test(phone);
+      const addrOk = type !== 'delivery' || address.length >= 6;
+      setError('custName', !nameOk);
+      setError('custPhone', !phoneOk);
+      setError('custAddress', !addrOk);
+      if (!nameOk || !phoneOk || !addrOk) {
+        const firstBad = !nameOk ? 'custName' : !phoneOk ? 'custPhone' : 'custAddress';
+        $('#' + firstBad).focus();
+        return;
+      }
+
+      // 建立訂單（模擬）
+      const sub = cartSubtotal();
+      const total = sub + shippingFor(type, sub);
+      const d = new Date();
+      const orderNo = 'HJ' + d.getFullYear().toString().slice(2) + String(d.getMonth() + 1).padStart(2, '0') + String(d.getDate()).padStart(2, '0') + '-' + Math.floor(1000 + Math.random() * 9000);
+      const store = STORES.find(s => s.id === $('#pickupStore').value);
+
+      $('#successOrderNo').textContent = orderNo;
+      $('#successType').textContent = TYPE_LABEL[type];
+      $('#successTotal').textContent = money(total);
+      $('#successHint').textContent = type === 'delivery'
+        ? `我們將以冷凍宅配寄送至：${address}，預計 2–3 個工作天送達。`
+        : `請於約 15 分鐘後至「${store.name}」${type === 'dine' ? '櫃檯報到入座' : '取餐'}，取餐時請告知訂單編號。`;
+
+      $('#checkoutFormView').classList.add('hidden');
+      $('#checkoutSuccessView').classList.remove('hidden');
+      modal.firstElementChild.scrollTop = 0;
+
+      // 清空購物車與表單
+      cart = [];
+      saveCart();
+      renderCart();
+      form.reset();
+      refreshIcons();
+    });
+
+    /* =====================================================
+       電子報訂閱
+       ===================================================== */
+    $('#newsletterForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const input = $('#newsletterEmail');
+      const msg = $('#newsletterMsg');
+      const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value.trim());
+      msg.classList.remove('hidden');
+      msg.className = 'mt-2 text-xs ' + (ok ? 'text-green-400' : 'text-red-400');
+      msg.textContent = ok ? '訂閱成功！歡迎加入禾煎會員通訊。' : '請輸入正確的 Email 格式。';
+      if (ok) { input.value = ''; toast('電子報訂閱成功，感謝你的支持！', 'mail-check'); }
+    });
+
+    /* =====================================================
+       隱私權政策 / 服務條款 Modal
+       ===================================================== */
+    const policyModal = $('#policyModal');
+    $$('.policy-link').forEach(a => a.addEventListener('click', e => {
+      e.preventDefault();
+      const p = POLICIES[a.dataset.policy];
+      $('#policyTitle').textContent = p.title;
+      $('#policyBody').innerHTML = p.body.map(t => `<p>${t}</p>`).join('');
+      showModal(policyModal);
+    }));
+    $('#policyClose').addEventListener('click', () => hideModal(policyModal));
+    policyModal.addEventListener('click', e => { if (e.target === policyModal) hideModal(policyModal); });
+
+    /* ---------- Esc 鍵關閉所有浮層 ---------- */
+    document.addEventListener('keydown', e => {
+      if (e.key !== 'Escape') return;
+      if (!policyModal.classList.contains('hidden')) hideModal(policyModal);
+      else if (!modal.classList.contains('hidden')) hideModal(modal);
+      else closeCart();
+    });
+
+    /* =====================================================
+       初始化
+       ===================================================== */
+    $('#year').textContent = new Date().getFullYear();
+    renderTabs();
+    renderMenu();
+    renderGifts();
+    renderStores();
+    renderFAQ();
+    renderCart();
+    updateHeader();
+    refreshIcons();
+  })();
+  </script>
+</body>
+</html>
