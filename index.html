@@ -6,6 +6,17 @@
   <title>禾煎 HÉ JIAN｜金黃酥脆鍋貼專賣</title>
   <meta name="description" content="禾煎鍋貼專賣：台灣在地豬肉、每日現包、現點現煎。線上點餐、冷凍禮盒宅配。" />
 
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#3B2A20" />
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="禾煎鍋貼" />
+
   <!-- 字體：Noto Serif TC（典雅標題）＋ Noto Sans TC（無襯線內文） -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -128,6 +139,9 @@
 
       <!-- 右側：購物車 + CTA + 手機選單 -->
       <div class="flex items-center gap-2 sm:gap-3">
+        <button id="installBtn" type="button" class="hidden h-11 items-center gap-1.5 rounded-full px-3 text-sm font-medium text-cream transition hover:bg-white/10" aria-label="安裝禾煎 App">
+          <i data-lucide="download" class="h-5 w-5"></i><span class="hidden md:inline">安裝 App</span>
+        </button>
         <button id="cartBtn" type="button" class="relative grid h-11 w-11 place-items-center rounded-full text-cream transition hover:bg-white/10" aria-label="開啟購物車">
           <i data-lucide="shopping-bag" class="h-5 w-5"></i>
           <span id="cartBadge" class="absolute -right-0.5 -top-0.5 hidden min-w-[20px] rounded-full bg-ember px-1.5 text-center text-[11px] font-bold leading-5 text-white">0</span>
@@ -702,7 +716,7 @@
       $('#logoSub').classList.toggle('text-wood-light', scrolled);
       $('#desktopNav').classList.toggle('text-cream/90', !scrolled);
       $('#desktopNav').classList.toggle('text-wood', scrolled);
-      [$('#cartBtn'), menuToggle].forEach(btn => {
+      [$('#cartBtn'), $('#installBtn'), menuToggle].forEach(btn => {
         btn.classList.toggle('text-cream', !scrolled);
         btn.classList.toggle('text-wood', scrolled);
         btn.classList.toggle('hover:bg-white/10', !scrolled);
@@ -1577,6 +1591,31 @@
       }
       tick();
     }
+
+    /* =====================================================
+       PWA：註冊 Service Worker ＋「安裝 App」按鈕
+       ===================================================== */
+    if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+    }
+    let deferredInstall = null;
+    const installBtn = $('#installBtn');
+    window.addEventListener('beforeinstallprompt', e => {
+      e.preventDefault();
+      deferredInstall = e;
+      installBtn.classList.remove('hidden');
+      installBtn.classList.add('inline-flex');
+    });
+    installBtn.addEventListener('click', async () => {
+      if (!deferredInstall) return;
+      deferredInstall.prompt();
+      const { outcome } = await deferredInstall.userChoice;
+      deferredInstall = null;
+      installBtn.classList.add('hidden');
+      installBtn.classList.remove('inline-flex');
+      if (outcome === 'accepted') toast('已安裝禾煎 App，可從主畫面開啟！', 'smartphone');
+    });
+    window.addEventListener('appinstalled', () => { installBtn.classList.add('hidden'); installBtn.classList.remove('inline-flex'); });
 
     /* =====================================================
        初始化
