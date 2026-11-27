@@ -67,6 +67,25 @@
     .no-scrollbar { scrollbar-width: none; }
     /* 抽屜開啟時鎖定背景捲動 */
     body.lock { overflow: hidden; }
+    /* 主頁人來人往動畫 */
+    .crowd { position: absolute; inset: auto 0 0 0; height: 130px; overflow: hidden; pointer-events: none; }
+    .crowd::after { content: ""; position: absolute; inset: auto 0 14px 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(248,242,233,.18) 20%, rgba(248,242,233,.18) 80%, transparent); }
+    .walker { position: absolute; bottom: 14px; left: -90px; width: calc(46px * var(--s)); animation: walk-across var(--dur) linear var(--delay) infinite; }
+    .walker.rtl { animation-direction: reverse; }
+    .walker.rtl svg { transform: scaleX(-1); }
+    .walker svg { display: block; width: 100%; height: auto; overflow: visible; }
+    .walker .bob   { animation: bob var(--step) ease-in-out infinite; }
+    .walker .limb  { transform-box: view-box; animation: swing calc(var(--step) * 2) ease-in-out infinite alternate; }
+    .walker .arm   { transform-origin: 23px 22px; }
+    .walker .leg   { transform-origin: 23px 50px; }
+    .walker .alt   { animation-delay: calc(var(--step) * -2); }
+    @keyframes walk-across { from { left: -90px; } to { left: calc(100% + 90px); } }
+    @keyframes swing { from { transform: rotate(-26deg); } to { transform: rotate(26deg); } }
+    @keyframes bob   { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-1.6px); } }
+    @media (prefers-reduced-motion: reduce) {
+      .walker, .walker .bob, .walker .limb { animation: none; }
+      .walker { left: var(--x); }
+    }
   </style>
 </head>
 
@@ -145,6 +164,8 @@
            alt="剛煎好的金黃鍋貼" class="fallback-img absolute inset-0 h-full w-full object-cover" />
       <div class="absolute inset-0 bg-gradient-to-r from-wood-dark/80 via-wood-dark/60 to-wood-dark/30 md:via-wood-dark/40 md:to-transparent"></div>
       <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-wood-dark/60 to-transparent"></div>
+      <!-- 人來人往動畫（由 JS 產生行人） -->
+      <div id="crowd" class="crowd" aria-hidden="true"></div>
 
       <div class="relative mx-auto w-full max-w-7xl px-4 pt-24 pb-16 sm:px-6 lg:px-8">
         <div class="max-w-2xl [text-shadow:0_2px_14px_rgba(36,25,18,0.55)]">
@@ -1221,6 +1242,42 @@
     });
 
     /* =====================================================
+       主頁人來人往動畫
+       ===================================================== */
+    function renderCrowd() {
+      const crowd = $('#crowd');
+      if (!crowd) return;
+      const tones = ['#F8F2E9', '#EFE5D6', '#E2D3BE', '#F0A15E'];
+      const count = window.innerWidth < 640 ? 7 : 12;
+      const figure = (color, bag) => `
+        <svg viewBox="0 0 46 82" xmlns="http://www.w3.org/2000/svg">
+          <g class="bob" fill="none" stroke="${color}" stroke-linecap="round">
+            <line class="limb leg alt" x1="23" y1="50" x2="23" y2="78" stroke-width="6"/>
+            <line class="limb arm alt" x1="23" y1="22" x2="23" y2="42" stroke-width="5"/>
+            <line x1="23" y1="20" x2="23" y2="50" stroke-width="9"/>
+            <circle cx="23" cy="9" r="7" fill="${color}" stroke="none"/>
+            <line class="limb leg" x1="23" y1="50" x2="23" y2="78" stroke-width="6"/>
+            <g class="limb arm">
+              <line x1="23" y1="22" x2="23" y2="42" stroke-width="5"/>
+              ${bag ? '<rect x="17" y="42" width="12" height="11" rx="2" fill="#D9752B" stroke="none"/><path d="M20 42 q3 -4 6 0" stroke="#D9752B" stroke-width="1.5"/>' : ''}
+            </g>
+          </g>
+        </svg>`;
+      crowd.innerHTML = Array.from({ length: count }, (_, i) => {
+        const depth = Math.random();                       // 0 = 遠、1 = 近
+        const s = (0.7 + depth * 0.5).toFixed(2);          // 遠的人較小
+        const dur = (34 - depth * 14 + Math.random() * 6).toFixed(1); // 近的人走較快
+        const step = (0.42 + Math.random() * 0.12).toFixed(2);
+        const delay = (-Math.random() * dur).toFixed(1);   // 負延遲：一開始就散佈在畫面上
+        const color = tones[Math.floor(Math.random() * tones.length)];
+        const opacity = (0.35 + depth * 0.5).toFixed(2);
+        const rtl = Math.random() < 0.5 ? ' rtl' : '';
+        const x = Math.round((i + Math.random() * 0.6) / count * 100);
+        return `<div class="walker${rtl}" style="--s:${s};--dur:${dur}s;--delay:${delay}s;--step:${step}s;--x:${x}%;opacity:${opacity};z-index:${Math.round(depth * 10)}">${figure(color, Math.random() < 0.4)}</div>`;
+      }).join('');
+    }
+
+    /* =====================================================
        初始化
        ===================================================== */
     $('#year').textContent = new Date().getFullYear();
@@ -1228,6 +1285,7 @@
     renderMenu();
     renderGifts();
     renderStores();
+    renderCrowd();
     renderFAQ();
     renderCart();
     updateHeader();
