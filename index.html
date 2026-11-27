@@ -1135,7 +1135,7 @@
     /* ---------- Google Sheet 訂單串接（Google Apps Script 網頁應用程式） ----------
        部署 gas/Code.gs 後，把「網頁應用程式網址」貼在下面引號中即可啟用。
        留空時維持模擬結帳（訂單不會寫入試算表）。 */
-    const ORDER_API_URL = '';
+    const ORDER_API_URL = 'https://script.google.com/macros/s/AKfycbzpqlXQt3GoYr5h4YF8ZuQh7g51Py1H9_EqbtdEAyIKLgDk8ooPYrLyHKlMADs1Q575/exec';
 
     if (ORDER_API_URL) $('#orderNote').textContent = '送出後訂單將即時傳送至門市，付款於取餐或到貨時進行。';
 
