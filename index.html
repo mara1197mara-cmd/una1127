@@ -87,10 +87,6 @@
     @keyframes walk-across { from { left: -90px; } to { left: calc(100% + 90px); } }
     @keyframes swing { from { transform: rotate(-26deg); } to { transform: rotate(26deg); } }
     @keyframes bob   { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-1.6px); } }
-    @media (prefers-reduced-motion: reduce) {
-      .walker, .walker .bob, .walker .limb { animation: none; }
-      .walker { left: var(--x); }
-    }
   </style>
 </head>
 
@@ -1284,7 +1280,7 @@
 
     /* =====================================================
        主頁 3D 街景：行人路過、走進／走出店家（Three.js）
-       載入失敗、不支援 WebGL 或使用者偏好減少動態時，保留上方 2D 版本
+       載入失敗或不支援 WebGL 時，保留上方 2D 版本
        ===================================================== */
     function loadScript(src) {
       return new Promise((resolve, reject) => {
@@ -1305,7 +1301,6 @@
     async function initCrowd3D() {
       const host = $('#crowd');
       if (!host || !webglAvailable()) return;
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       try {
         if (!window.THREE) await loadScript('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js');
       } catch (e) { return; } // 載入失敗：維持 2D
